@@ -1,9 +1,9 @@
 <?php
-namespace GollumSF\AuthRestBundle\Entity;
+namespace GollumSF\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use GollumSF\AuthRestBundle\Entity\Repository\UserTokenRepository;
+use GollumSF\UserBundle\Entity\Repository\UserTokenRepository;
 
 /**
  * User

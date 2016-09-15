@@ -3,4 +3,6 @@ gsf_user:
         login:
             title: 'Sign In'
         register:
-            title: 'Sign Uo'
+            title: 'Sign Up'
+        resetPassword:
+            title: 'Reset Password'

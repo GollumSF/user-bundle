@@ -1,1 +1,8 @@
-<?php
+{% extends base_auth %}
+
+{% block title %}{{ 'gsf_user.auth.login.title'|trans }}{% endblock %}
+
+{% block content %}
+	<h1>{{ 'gsf_user.auth.login.title'|trans }}</h1>
+	{{ form(form) }}
+{% endblock %}

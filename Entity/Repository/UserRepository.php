@@ -1,5 +1,6 @@
 <?php
-namespace GollumSF\AuthRestBundle\Entity\Repository;
+namespace GollumSF\UserBundle\Entity\Repository;
+
 use Doctrine\ORM\EntityRepository;
 
 /**

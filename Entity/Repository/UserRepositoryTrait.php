@@ -1,6 +1,7 @@
 <?php
-namespace GollumSF\AuthRestBundle\Entity\Repository;
-use GollumSF\AuthRestBundle\Entity\UserInterface;
+namespace GollumSF\UserBundle\Entity\Repository;
+
+use GollumSF\UserBundle\Entity\UserInterface;
 
 /**
  * UserRepositoryTrait

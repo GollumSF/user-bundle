@@ -4,3 +4,5 @@ gsf_user:
             title: 'Connexion'
         register:
             title: 'Inscription'
+        resetPassword:
+            title: 'Réinitialiser votre mot de passe'

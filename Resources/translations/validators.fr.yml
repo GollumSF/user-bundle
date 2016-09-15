@@ -1,2 +1,3 @@
-gsf_user.user:
-    emailNotFound: 'E-mail non trouvé.'
+gsf_user:
+    user:
+        emailNotFound: 'E-mail non trouvé.'

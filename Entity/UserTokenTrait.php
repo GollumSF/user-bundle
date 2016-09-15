@@ -1,5 +1,5 @@
 <?php
-namespace GollumSF\AuthRestBundle\Entity;
+namespace GollumSF\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;

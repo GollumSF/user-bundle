@@ -1,6 +1,7 @@
 <?php
-namespace GollumSF\AuthRestBundle\Manager;
-use GollumSF\AuthRestBundle\Entity\UserInterface;
+namespace GollumSF\UserBundle\Manager;
+
+use GollumSF\UserBundle\Entity\UserInterface;
 
 /**
  * UserManagerInterface

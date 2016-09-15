@@ -1,5 +1,5 @@
 <?php
-namespace GollumSF\AuthRestBundle\Manager;
+namespace GollumSF\UserBundle\Manager;
 
 /**
  * UserManager

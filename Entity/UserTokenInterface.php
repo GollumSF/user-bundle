@@ -1,5 +1,5 @@
 <?php
-namespace GollumSF\AuthRestBundle\Entity;
+namespace GollumSF\UserBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface as UserInterfaceBase;
 

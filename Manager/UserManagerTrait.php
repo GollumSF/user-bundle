@@ -1,9 +1,9 @@
 <?php
-namespace GollumSF\AuthRestBundle\Manager;
+namespace GollumSF\UserBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use GollumSF\AuthRestBundle\Entity\Repository\UserRepository;
-use GollumSF\AuthRestBundle\Entity\UserInterface;
+use GollumSF\UserBundle\Entity\Repository\UserRepository;
+use GollumSF\UserBundle\Entity\UserInterface;
 
 /**
  * UserManagerTrait
