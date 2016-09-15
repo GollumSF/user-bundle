@@ -1,0 +1,25 @@
+parameters:
+    gsf_rest.listenerview_class: GollumSF\RestBundle\EventListener\ViewListener
+    gsf_rest.listenerroute_class: GollumSF\RestBundle\EventListener\RouteListener
+
+services:
+  
+    ##########
+    # Events #
+    ##########
+    
+    gsf_rest.listener.view:
+        class: "%gsf_rest.listenerview_class%"
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: kernel.event_listener, event: kernel.view }
+
+    gsf_rest.listener.route:
+        class: "%gsf_rest.listenerroute_class%"
+        arguments:
+            - "@annotation_reader"
+            - "%gollum_sf_rest.configurations%"
+        tags:
+            - { name: kernel.event_listener, event: gsf_core.route_created }
+            

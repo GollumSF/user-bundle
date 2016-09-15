@@ -1,0 +1,6 @@
+gsf_user:
+    auth:
+        login:
+            title: 'Sign In'
+        register:
+            title: 'Sign Uo'

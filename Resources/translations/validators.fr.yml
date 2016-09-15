@@ -1,0 +1,2 @@
+gsf_user.user:
+    emailNotFound: 'E-mail non trouvé.'

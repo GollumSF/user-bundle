@@ -1,0 +1,6 @@
+gsf_user:
+    auth:
+        login:
+            title: 'Connexion'
+        register:
+            title: 'Inscription'
