@@ -63,11 +63,13 @@ gsf_user:
 
 ### security.yml
 
-Must matched the config.yml urls values.
-By default the 3 urls is /login, /register, /reset-password
-
 ```yml
 security:
+    role_hierarchy: 
+        ROLE_USER:  []
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN]
+        
     providers:
         main:
             entity: { class: "GollumSFUserBundle:User" } # Must match gollum_sf_user.user.entity
@@ -76,5 +78,5 @@ security:
         main:
             pattern: ^/   # Path where enable the authentification
             gsf_user: ~   # Enable the authentification
-            anonymous: ~  #Enable the anonymous authentification
+            anonymous: ~  # Enable the anonymous authentification
 ```
