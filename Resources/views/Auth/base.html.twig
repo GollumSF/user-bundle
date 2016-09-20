@@ -30,6 +30,11 @@
 				width: 100%;
 				margin: auto;
 			}
+			#container:after {
+				content: " ";
+				display: block;
+				clear: both;
+			}
 			
 			label {
 				display: block;
@@ -46,13 +51,26 @@
 				max-width: 400px;
 			}
 			
-			
 			button {
 				background: #efefef;
 				border: 1px solid #999;
 				border-radius: 10px;
 				line-height: 2.5em;
 				padding: 0 3em;
+				margin-bottom: 1em;
+			}
+			
+			a, a:active, a:hover {
+				color: #0000F0;
+			 	text-decoration: none;
+			}
+			
+			.gsf-reset_password-link .gsf-link-register {
+				float: right;
+			}
+			
+			.gsf-link-reset_password {
+				float: right;
 			}
 			
 			@media all and (max-width: 768px) {

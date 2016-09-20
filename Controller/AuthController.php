@@ -2,13 +2,15 @@
 namespace GollumSF\UserBundle\Controller;
 
 use GollumSF\CoreBundle\Controller\CoreAbstractController;
+use GollumSF\UserBundle\Manager\UserManagerInterface;
 use GollumSF\UserBundle\Parameter\ParameterSelector;
-use Redori\UserBundle\Manager\UserManager;
+use GollumSF\UserBundle\Security\Token\GollumSFToken;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
  * AuthController
@@ -17,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthController extends CoreAbstractController {
 	
 	/**
-	 * @var UserManager
+	 * @var UserManagerInterface
 	 */
 	private $userManager;
 	
@@ -31,12 +33,18 @@ class AuthController extends CoreAbstractController {
 	 */
 	private $twigSelector;
 	
+	/**
+	 * @var ParameterSelector
+	 */
+	private $urlSelector;
+	
 	
 	public function setContainer(ContainerInterface $container = null) {
 		parent::setContainer($container);
 		$this->userManager  = $this->get('gsf_user.manager.user');
 		$this->formSelector = $this->get('gsf_user.parameter.twig_selector');
 		$this->twigSelector = $this->get('gsf_user.parameter.form_selector');
+		$this->urlSelector  = $this->get('gsf_user.parameter.url_selector');
 	}
 	
 	/**
@@ -45,8 +53,9 @@ class AuthController extends CoreAbstractController {
 	 */
 	public function loginAction(Request $request) {
 		
-		$user = $this->userManager->createUser();
-		$form = $this->createForm($this->getForm('login'), $user);
+		$user     = $this->userManager->createUser();
+		$form     = $this->createForm($this->getForm('login'), $user, [ 'validation_groups' => ['login'] ]);
+		$redirect = $request->get('redirect');
 		
 		if ($request->isMethod('POST')) {
 			$form->handleRequest($request);
@@ -56,8 +65,14 @@ class AuthController extends CoreAbstractController {
 				if ($userDB) {
 					
 					// TODO Log User
+					$user = $this->userManager->register($userDB);
 					
-					return $this->redirect($request->get('redirect') ? $request->get('redirect') : $this->getHomepage());
+					/** @var TokenStorage $tokenStorage */
+					$tokenStorage = $this->get('security.token_storage');
+					$token = new GollumSFToken($user);
+					$tokenStorage->setToken($token);
+					
+					return $this->redirect($redirect ? $redirect : $this->getUrl('homepage'));
 					
 				} else {
 					$translator = $this->get('translator');
@@ -68,9 +83,11 @@ class AuthController extends CoreAbstractController {
 		}
 		
 		return $this->render($this->getTwig('login'), [
-			'base'      => $this->getTwig('base'),
-			'base_auth' => $this->getTwig('base_auth'),
-			'form'      => $form->createView(),
+			'base'           => $this->getTwig('base'),
+			'base_auth'      => $this->getTwig('base_auth'),
+			'form'           => $form->createView(),
+			'register'       => $this->getUrl('register').($redirect ? '?redirect='.urlencode($redirect) : ''),
+			'reset_password' => $this->getUrl('reset_password').($redirect ? '?redirect='.urlencode($redirect) : ''),
 		]);
 	}
 	
@@ -79,23 +96,32 @@ class AuthController extends CoreAbstractController {
 	 * @Method({"GET", "POST"})
 	 */
 	public function registerAction(Request $request) {
-		$user = $this->userManager->createUser();
-		$form = $this->createForm($this->getForm('register'), $user);
+		
+		$user      = $this->userManager->createUser();
+		$form     = $this->createForm($this->getForm('register'), $user, [ 'validation_groups' => ['register'] ]);
+		$redirect = $request->get('redirect');
 		
 		if ($request->isMethod('POST')) {
 			$form->handleRequest($request);
 			if ($form->isValid()) {
 				
-				// TODO SET User in BDD
+				$user = $this->userManager->register($user);
 				
-				return $this->redirect($request->get('redirect') ? $request->get('redirect') : $this->getHomepage());
+				/** @var TokenStorage $tokenStorage */
+				$tokenStorage = $this->get('security.token_storage');
+				$token = new GollumSFToken($user);
+				$tokenStorage->setToken($token);
+				
+				return $this->redirect($redirect ? $redirect : $this->getUrl('homepage'));
 			}
 		}
 		
 		return $this->render($this->getTwig('register'), [
-			'base'      => $this->getTwig('base'),
-			'base_auth' => $this->getTwig('base_auth'),
-			'form'      => $form->createView(),
+			'base'           => $this->getTwig('base'),
+			'base_auth'      => $this->getTwig('base_auth'),
+			'form'           => $form->createView(),
+			'login'          => $this->getUrl('login').($redirect ? '?redirect='.urlencode($redirect) : ''),
+			'reset_password' => $this->getUrl('reset_password').($redirect ? '?redirect='.urlencode($redirect) : ''),
 		]);
 	}
 	
@@ -104,8 +130,10 @@ class AuthController extends CoreAbstractController {
 	 * @Method({"GET", "POST"})
 	 */
 	public function resetPasswordAction(Request $request) {
-		$user = $this->userManager->createUser();
-		$form = $this->createForm($this->getForm('reset_password'), $user);
+		
+		$user     = $this->userManager->createUser();
+		$form     = $this->createForm($this->getForm('reset_password'), $user, [ 'validation_groups' => ['reset_password'] ]);
+		$redirect = $request->get('redirect');
 		
 		if ($request->isMethod('POST')) {
 			$form->handleRequest($request);
@@ -113,7 +141,7 @@ class AuthController extends CoreAbstractController {
 				
 				// TODO Send Email reset password
 				
-				return $this->redirect($request->get('redirect') ? $request->get('redirect') : $this->getHomepage());
+				return $this->redirect($this->getUrl('login').($redirect ? '?redirect='.urlencode($redirect) : ''));
 			}
 		}
 		
@@ -121,6 +149,8 @@ class AuthController extends CoreAbstractController {
 			'base'      => $this->getTwig('base'),
 			'base_auth' => $this->getTwig('base_auth'),
 			'form'      => $form->createView(),
+			'login'     => $this->getUrl('login').($redirect ? '?redirect='.urlencode($redirect) : ''),
+			'register'  => $this->getUrl('register').($redirect ? '?redirect='.urlencode($redirect) : ''),
 		]);
 	}
 	
@@ -143,14 +173,15 @@ class AuthController extends CoreAbstractController {
 	/**
 	 * @return string
 	 */
-	protected function getHomepage() {
+	protected function getUrl($key) {
 		$request = $this->getRequest();
-		$url = $this->container->getParameter('gsf_user.configurations.homepage');
+		$url = $this->urlSelector->get($key);
 		if (
 			strpos($url, '//') !== 0 &&
-			!filter_var($url, FILTER_VALIDATE_URL)
+			!filter_var($url, FILTER_VALIDATE_URL) &&
+			$this->get('kernel')->getEnvironment() == 'dev'
 		) {
-			$url = $request->getBasePath().$url;
+			$url = $request->getBaseUrl().$url;
 		}
 		return $url;
 	}

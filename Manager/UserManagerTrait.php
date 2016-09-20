@@ -60,10 +60,35 @@ trait UserManagerTrait {
 	}
 	
 	/**
+	 * @param UserInterface $user
+	 * @return UserInterface
+	 */
+	public function register(UserInterface $user) {
+		
+		$user->setEnabled(true);
+		$user->setSalt(uniqid());
+		$user->setPassword(md5($user->getPlainPassword()));
+		$user->eraseCredentials();
+		
+		$em = $this->getEntityManager();
+		$em->persist($user);
+		$em->flush();
+		
+		return $user;
+	}
+	
+	/**
 	 * @return UserInterface
 	 */
 	public function findOneEnabledByEmail($email) {
 		return $this->getRepository()->findOneEnabledByEmail($email);
+	}
+	
+	/**
+	 * @return UserInterface
+	 */
+	public function findOneEnabledById($email) {
+		return $this->getRepository()->findOneEnabledById($email);
 	}
 	
 }

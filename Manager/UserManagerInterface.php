@@ -19,6 +19,16 @@ interface UserManagerInterface {
 	 * @return UserInterface
 	 */
 	public function createUser();
+	/**
+	 * @param UserInterface $user
+	 * @return UserInterface
+	 */
+	public function register(UserInterface $user);
+	
+	/**
+	 * @return UserInterface
+	 */
+	public function findOneEnabledById($id);
 	
 	/**
 	 * @return UserInterface

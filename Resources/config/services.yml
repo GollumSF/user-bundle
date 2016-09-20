@@ -1,8 +1,23 @@
 parameters:
+    gsf_user.securityauthenticationprovider_class: GollumSF\UserBundle\Security\Authentication\Provider\UserAuthenticationProvider
+    gsf_user.securityauthenticationlistener_class:  GollumSF\UserBundle\Security\Firewall\UserListener
     gsf_user.parameter_twigselector_class: GollumSF\UserBundle\Parameter\ParameterSelector
     gsf_user.parameter_formselector_class: GollumSF\UserBundle\Parameter\ParameterSelector
-
+    gsf_user.listener_insufficientauthentication_class: GollumSF\UserBundle\EventListener\InsufficientAuthenticationListener
 services:
+    
+    gsf_user.security.authentication_provider:
+        class: '%gsf_user.securityauthenticationprovider_class%'
+        arguments:
+            - '@gsf_user.manager.user'
+        public: false
+    
+    gsf_user.security.authentication_listener:
+        class: '%gsf_user.securityauthenticationlistener_class%'
+        arguments:
+            - '@security.token_storage'
+            - '@security.authentication.manager'
+        public: false
     
     gsf_user.manager.user:
         class: "%gsf_user.configurations.user.manager%"
@@ -21,3 +36,18 @@ services:
         arguments:
             - '@service_container'
             - 'gsf_user.configurations.twig'
+    
+    gsf_user.parameter.url_selector:
+        class: "%gsf_user.parameter_formselector_class%"
+        arguments:
+            - '@service_container'
+            - 'gsf_user.configurations.url'
+    
+    gsf_user.listener.insufficient_authentication:
+        class: "%gsf_user.listener_insufficientauthentication_class%"
+        arguments:
+            - '@security.token_storage'
+            - '@gsf_user.parameter.url_selector'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+    

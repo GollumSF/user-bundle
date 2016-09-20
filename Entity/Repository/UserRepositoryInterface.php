@@ -15,4 +15,9 @@ interface UserRepositoryInterface {
 	 */
 	public function findOneEnabledByEmail($email);
 	
+	/**
+	 * @return UserInterface
+	 */
+	public function findOneEnabledById($id);
+	
 }

@@ -3,6 +3,18 @@
 {% block title %}{{ 'gsf_user.auth.register.title'|trans }}{% endblock %}
 
 {% block content %}
-	<h1>{{ 'gsf_user.auth.register.title'|trans }}</h1>
-	{{ form(form) }}
+	<div class="gsf-register" >
+		
+		<h1>{{ 'gsf_user.auth.register.title'|trans }}</h1>
+		
+		<div class="gsf-register-form" >
+			{{ form(form) }}
+		</div>
+		
+		<div class="gsf-register-link" >
+			<a href="{{ login }}" class="gsf-link-login"   title="Sign In" >Sign In</a>
+			<a href="{{ reset_password }}" class="gsf-link-reset_password" title="Forget password" >Forget password</a>
+		</div>
+	
+	</div>
 {% endblock %}

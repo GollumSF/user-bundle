@@ -18,10 +18,10 @@ class Configuration implements ConfigurationInterface {
 		
 		$rootNode
 			->children()
-				->scalarNode('homepage')->defaultValue('/')->end()
 				->append($this->addUserNode())
 				->append($this->addTwigNode())
 				->append($this->addFormNode())
+				->append($this->addUrlNode())
 			->end()
 		;
 		
@@ -71,6 +71,23 @@ class Configuration implements ConfigurationInterface {
 				->scalarNode('login')         ->defaultValue(LoginType::class)        ->end()
 				->scalarNode('register')      ->defaultValue(RegisterType::class)     ->end()
 				->scalarNode('reset_password')->defaultValue(ResetPasswordType::class)->end()
+			->end()
+		;
+		
+		return $node;
+	}
+	
+	public function addUrlNode() {
+		$builder = new TreeBuilder();
+		$node = $builder->root('url');
+		
+		$node
+			->addDefaultsIfNotSet()
+			->children()
+				->scalarNode('homepage')      ->defaultValue('/')              ->end()
+				->scalarNode('login')         ->defaultValue('/login')         ->end()
+				->scalarNode('register')      ->defaultValue('/register')      ->end()
+				->scalarNode('reset_password')->defaultValue('/reset-password')->end()
 			->end()
 		;
 		

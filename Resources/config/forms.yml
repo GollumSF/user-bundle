@@ -1,0 +1,18 @@
+parameters:
+
+services:
+    
+    gsf_user.form.login:
+        class: "%gsf_user.configurations.form.login%"
+        tags:
+            - { name: form.type }
+            
+    gsf_user.form.register:
+        class: "%gsf_user.configurations.form.register%"
+        tags:
+            - { name: form.type }
+    
+    gsf_user.form.reset_password:
+        class: "%gsf_user.configurations.form.reset_password%"
+        tags:
+            - { name: form.type }

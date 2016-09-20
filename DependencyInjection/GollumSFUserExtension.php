@@ -21,6 +21,7 @@ class GollumSFUserExtension extends Extension {
 		
 		$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . "/../Resources/config"));
 		$loader->load("services.yml");
+		$loader->load("forms.yml");
 	}
 	
 	protected function applyConfigToParameter(ContainerBuilder $container, $prefix, $config) {

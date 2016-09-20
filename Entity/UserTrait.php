@@ -4,6 +4,7 @@ namespace GollumSF\UserBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * UserTrait
@@ -25,7 +26,11 @@ trait UserTrait {
 	
 	/**
 	 * @var string
+	 * 
 	 * @ORM\Column(type="string", length=180)
+	 * 
+	 * @Assert\NotBlank(groups={"Default", "login", "register", "reset_password"})
+	 * @Assert\Email(groups={"Default", "login", "register", "reset_password"})
 	 */
 	protected $email;
 	
@@ -39,6 +44,8 @@ trait UserTrait {
 	/**
 	 * Plain password. Used for model validation. Must not be persisted.
 	 * @var string
+	 *
+	 * @Assert\NotBlank(groups={"login", "register"})
 	 */
 	protected $plainPassword;
 	
@@ -50,11 +57,11 @@ trait UserTrait {
 	protected $salt;
 	
 	/**
-	 * @var int
+	 * @var string
 	 * 
 	 * @ORM\Column(type="text", nullable=false)
 	 */
-	protected $roles;
+	protected $roles = '';
 	
 	/**
 	 * @var boolean
@@ -85,21 +92,21 @@ trait UserTrait {
 	 * @return string
 	 */
 	public function getEmail() {
-		$this->email;
+		return $this->email;
 	}
 	
 	/**
 	 * @return string
 	 */
 	public function getPassword() {
-		$this->password;
+		return $this->password;
 	}
 	
 	/**
 	 * @return string
 	 */
 	public function getPlainPassword() {
-		$this->plainPassword;
+		return $this->plainPassword;
 	}
 	
 	/**
@@ -113,7 +120,10 @@ trait UserTrait {
 	 * @return string[]
 	 */
 	public function getRoles() {
-		$roles = explode('|', $this->roles);
+		$roles = [];
+		if ($this->roles) {
+			$roles = explode('|', $this->roles);	
+		}
 		$roles[] = User::ROLE_DEFAULT;
 		return array_unique($roles);
 	}

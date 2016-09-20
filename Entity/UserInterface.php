@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface as UserInterfaceBase;
  * @author Damien Duboeuf <smeagolworms4@gmail.com>
  */
 interface UserInterface extends UserInterfaceBase {
+	
 	/////////////
 	// Getters //
 	/////////////
