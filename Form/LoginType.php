@@ -16,9 +16,15 @@ class LoginType extends AbstractType {
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
-			->add('email'        , EmailType::class)
-			->add('plainPassword', PasswordType::class)
-			->add('submit'       , SubmitType::class)
+			->add('email', EmailType::class, [
+				'label' => 'gsf_user.form.login.email'
+			])
+			->add('plainPassword', PasswordType::class, [
+				'label' => 'gsf_user.form.login.password'
+			])
+			->add('submit', SubmitType::class, [
+				'label' => 'gsf_user.form.login.submit'
+			])
 		;
 	}
 	

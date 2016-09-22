@@ -17,11 +17,18 @@ class RegisterType extends AbstractType{
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
-			->add('email', EmailType::class)
-			->add('plainPassword', RepeatedType::class, [
-				'type' => PasswordType::class
+			->add('email', EmailType::class, [
+				'label' => 'gsf_user.form.register.email'
 			])
-			->add('submit', SubmitType::class)
+			->add('plainPassword', RepeatedType::class, [
+				'type' => PasswordType::class,
+				'invalid_message' => 'gsf_user.form.register.password_not_match',
+				'first_options'  => [ 'label' => 'gsf_user.form.register.password' ],
+				'second_options' => [ 'label' => 'gsf_user.form.register.repeated_password' ],
+			])
+			->add('submit', SubmitType::class, [
+				'label' => 'gsf_user.form.register.submit'
+			])
 		;
 	}
 	

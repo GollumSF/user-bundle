@@ -2,7 +2,27 @@ gsf_user:
     auth:
         login:
             title: 'Connexion'
+            register: 'S''enregistrer'
+            forgot_password: 'Mot de passe oublié'
         register:
             title: 'Inscription'
-        resetPassword:
+            login: 'S''inscrire'
+            forgot_password: 'Mot de passe oublié'
+        reset_password:
             title: 'Réinitialiser votre mot de passe'
+            login: 'S''inscrire'
+            register: 'S''enregistrer'
+            
+    form:
+        login:
+            email: 'Email'
+            password: 'Mot de passe'
+            submit: 'Se connecter'
+        register:
+            email: 'Email'
+            password: 'Mot de passe'
+            repeated_password: 'Confirmer le mot de passe'
+            submit: 'S''inscrire'
+        reset_password:
+            email: 'Email'
+            submit: 'Envoyer'

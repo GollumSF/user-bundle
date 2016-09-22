@@ -15,8 +15,12 @@ class ResetPasswordType extends AbstractType{
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
-			->add('email' , EmailType::class)
-			->add('submit', SubmitType::class)
+			->add('email' , EmailType::class, [
+				'label' => 'gsf_user.form.reset_password.email'
+			])
+			->add('submit', SubmitType::class, [
+				'label' => 'gsf_user.form.reset_password.submit'
+			])
 		;
 	}
 	

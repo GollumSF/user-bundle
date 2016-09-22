@@ -1,8 +1,28 @@
 gsf_user:
     auth:
         login:
-            title: 'Sign In'
+            title: 'Login'
+            register: 'Register'
+            forgot_password: 'Forgot password'
         register:
-            title: 'Sign Up'
-        resetPassword:
+            title: 'Register'
+            login: 'Sign In'
+            forgot_password: 'Forgot password'
+        reset_password:
             title: 'Reset Password'
+            login: 'Sign In'
+            register: 'Register'
+    
+    form:
+        login:
+            email: 'Email'
+            password: 'Password'
+            submit: 'Sign In'
+        register:
+            email: 'Email'
+            password: 'Password'
+            repeated_password: 'Confirm the password'
+            submit: 'Sign Up'
+        reset_password:
+            email: 'Email'
+            submit: 'Send'

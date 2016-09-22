@@ -1,3 +1,6 @@
 gsf_user:
+    form:
+        register:
+            password_not_match: 'The password''s confirmation of  does not match.'
     user:
         emailNotFound: 'Email not found.'
