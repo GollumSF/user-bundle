@@ -1,0 +1,23 @@
+services:
+    
+    gsf_user.security.authentication_provider:
+        class: '%gsf_user.securityauthenticationprovider_class%'
+        arguments:
+            - '@gsf_user.manager.user'
+        public: false
+    
+    gsf_user.manager.user_connection:
+        class: "%gsf_user.configurations.user_connection.manager%"
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+            - [setEntityClass  , ['%gsf_user.configurations.user_connection.entity%']]
+            - [setEventDispatcher, ['@event_dispatcher']]
+    
+    gsf_user.manager.user:
+        class: "%gsf_user.configurations.user.manager%"
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+            - [setEntityClass  , ['%gsf_user.configurations.user.entity%']]
+            - [setEventDispatcher, ['@event_dispatcher']]
+            - [setUserConnectionManager  , ['@gsf_user.manager.user_connection']]
+    

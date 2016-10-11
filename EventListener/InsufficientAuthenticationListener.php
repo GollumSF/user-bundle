@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException;
 
@@ -23,12 +24,18 @@ class InsufficientAuthenticationListener {
 	private $tokenStorage;
 	
 	/**
+	 * @var RouterInterface
+	 */
+	private $router;
+	
+	/**
 	 * @var ParameterSelector
 	 */
 	private $urlSelector;
 	
-	public function __construct(TokenStorageInterface $tokenStorage, ParameterSelector $urlSelector) {
+	public function __construct(TokenStorageInterface $tokenStorage, RouterInterface $router,  ParameterSelector $urlSelector) {
 		$this->tokenStorage = $tokenStorage;
+		$this->router       = $router;
 		$this->urlSelector  = $urlSelector;
 	}
 	
@@ -49,13 +56,7 @@ class InsufficientAuthenticationListener {
 	 */
 	protected function getLoginUrl(Request $request) {
 		$url = $this->urlSelector->get('login');
-		if (
-			strpos($url, '//') !== 0 &&
-			!filter_var($url, FILTER_VALIDATE_URL)
-		) {
-			$url = $request->getBaseUrl().$url;
-		}
-		return $url;
+		return $this->router->generate($url);
 	}
 	
 	public function onKernelException(GetResponseForExceptionEvent $event) {
@@ -64,7 +65,11 @@ class InsufficientAuthenticationListener {
 		$request   = $event->getRequest();
 		$user      = $this->getUser();
 		
-		if (!$user && $exception instanceof InsufficientAuthenticationException) {
+		if (
+			!$user &&
+			!$request->isXmlHttpRequest() &&
+			$exception instanceof InsufficientAuthenticationException
+		) {
 			$url = $this->getLoginUrl($request);
 			$event->setResponse(new RedirectResponse($url.'?redirect='.urlencode($request->getRequestUri())));
 		}

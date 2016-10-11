@@ -2,9 +2,11 @@
 namespace GollumSF\UserBundle\DependencyInjection;
 
 use GollumSF\UserBundle\Entity\User;
+use GollumSF\UserBundle\Entity\UserConnection;
 use GollumSF\UserBundle\Form\LoginType;
 use GollumSF\UserBundle\Form\RegisterType;
 use GollumSF\UserBundle\Form\ResetPasswordType;
+use GollumSF\UserBundle\Manager\UserConnectionManager;
 use GollumSF\UserBundle\Manager\UserManager;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -19,6 +21,7 @@ class Configuration implements ConfigurationInterface {
 		$rootNode
 			->children()
 				->append($this->addUserNode())
+				->append($this->addUserConnectionNode())
 				->append($this->addTwigNode())
 				->append($this->addFormNode())
 				->append($this->addUrlNode())
@@ -37,6 +40,21 @@ class Configuration implements ConfigurationInterface {
 			->children()
 				->scalarNode('entity')->defaultValue(User::class)->end()
 				->scalarNode('manager')->defaultValue(UserManager::class)->end()
+			->end()
+		;
+		
+		return $node;
+	}
+	
+	public function addUserConnectionNode() {
+		$builder = new TreeBuilder();
+		$node = $builder->root('user_connection');
+		
+		$node
+			->addDefaultsIfNotSet()
+			->children()
+				->scalarNode('entity')->defaultValue(UserConnection::class)->end()
+				->scalarNode('manager')->defaultValue(UserConnectionManager::class)->end()
 			->end()
 		;
 		

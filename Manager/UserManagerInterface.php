@@ -11,14 +11,10 @@ use GollumSF\UserBundle\Entity\UserInterface;
 interface UserManagerInterface {
 	
 	/**
-	 * @return string
-	 */
-	public function getEntityClass();
-	
-	/**
 	 * @return UserInterface
 	 */
 	public function createUser();
+	
 	/**
 	 * @param UserInterface $user
 	 * @return UserInterface
@@ -34,4 +30,5 @@ interface UserManagerInterface {
 	 * @return UserInterface
 	 */
 	public function findOneEnabledByEmail($email);
+	
 }

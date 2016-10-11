@@ -2,8 +2,11 @@
 namespace GollumSF\UserBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use GollumSF\UserBundle\Entity\Repository\UserRepository;
+use GollumSF\UserBundle\Entity\Repository\UserRepositoryInterface;
+use GollumSF\UserBundle\Entity\UserConnection;
 use GollumSF\UserBundle\Entity\UserInterface;
+use GollumSF\UserBundle\Event\RegisterUserEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * UserManagerTrait
@@ -13,7 +16,7 @@ use GollumSF\UserBundle\Entity\UserInterface;
 trait UserManagerTrait {
 	
 	/**
-	 * @var EntityManager
+	 * @var EntityManagerInterface
 	 */
 	private $em;
 	
@@ -22,19 +25,39 @@ trait UserManagerTrait {
 	 */
 	private $entityClass;
 	
-	public function setEntityClass($entityClass) {
-		$this->entityClass = $entityClass;
-	}
+	/**
+	 * @var EventDispatcherInterface
+	 */
+	private $eventDispatcher;
+	
+	/**
+	 * @var UserConnectionManagerInterface
+	 */
+	private $userConnectionManager;
 	
 	public function setEntityManager(EntityManagerInterface $em) {
 		$this->em = $em;
 	}
 	
 	/**
-	 * @return string
+	 * @param string $entityClass
 	 */
-	public function getEntityClass() {
-		return $this->entityClass;
+	public function setEntityClass($entityClass) {
+		$this->entityClass = $entityClass;
+	}
+	
+	/**
+	 * @param EventDispatcherInterface $eventDispatcher
+	 */
+	public function setEventDispatcher(EventDispatcherInterface $eventDispatcher) {
+		$this->eventDispatcher = $eventDispatcher;
+	}
+	
+	/**
+	 * @param UserConnectionManagerInterface $userConnectionManager
+	 */
+	public function setUserConnectionManager(UserConnectionManagerInterface $userConnectionManager) {
+		$this->userConnectionManager = $userConnectionManager;
 	}
 	
 	/**
@@ -45,7 +68,28 @@ trait UserManagerTrait {
 	}
 	
 	/**
-	 * @return UserRepository
+	 * @return string
+	 */
+	public function getEntityClass() {
+		return $this->entityClass;
+	}
+	
+	/**
+	 * @return EventDispatcherInterface
+	 */
+	public function getEventDispatcher() {
+		return $this->eventDispatcher;
+	}
+	
+	/**
+	 * @return UserConnectionManagerInterface
+	 */
+	public function getUserConnectionManager() {
+		return $this->userConnectionManager;
+	}
+	
+	/**
+	 * @return UserRepositoryInterface
 	 */
 	public function getRepository() {
 		return $this->getEntityManager()->getRepository($this->getEntityClass());
@@ -65,14 +109,20 @@ trait UserManagerTrait {
 	 */
 	public function register(UserInterface $user) {
 		
-		$user->setEnabled(true);
 		$user->setSalt(uniqid());
 		$user->setPassword(md5($user->getPlainPassword()));
 		$user->eraseCredentials();
-		
 		$em = $this->getEntityManager();
 		$em->persist($user);
 		$em->flush();
+		
+		if ($user->getEmail()) {
+			$userConnection = $this->userConnectionManager->createUserConnection(UserConnection::PROVIDER_EMAIL, $user->getEmail(), $user, false);
+			$user->addUserConnection($userConnection);
+		}
+		
+		$event = new RegisterUserEvent($user);
+		$this->getEventDispatcher()->dispatch(RegisterUserEvent::NAME, $event);
 		
 		return $user;
 	}
@@ -81,7 +131,8 @@ trait UserManagerTrait {
 	 * @return UserInterface
 	 */
 	public function findOneEnabledByEmail($email) {
-		return $this->getRepository()->findOneEnabledByEmail($email);
+		$userConnection = $this->userConnectionManager->findOneByEmailWithUserEnabled($email);
+		return $userConnection ? $userConnection->getUser() : NULL;
 	}
 	
 	/**

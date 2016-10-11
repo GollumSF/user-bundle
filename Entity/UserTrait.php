@@ -68,14 +68,14 @@ trait UserTrait {
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
-	protected $enabled;
+	protected $enabled = true;
 	
 	/**
-	 * @var ArrayCollection
+	 * @var ArrayCollection|UserConnectionInterface[]
 	 *
 	 * @ORM\OneToMany(targetEntity=UserToken::class, mappedBy="user")
 	 */
-	protected $userTokens;
+	protected $userConnections;
 	
 	/////////////
 	// Getters //
@@ -135,6 +135,13 @@ trait UserTrait {
 		return $this->enabled;
 	}
 	
+	/**
+	 * @return ArrayCollection|UserConnectionInterface[]
+	 */
+	public function getUserConnections() {
+		return $this->userConnections;
+	}
+	
 	
 	/////////////
 	// Setters //
@@ -191,9 +198,11 @@ trait UserTrait {
 	
 	/**
 	 * @param boolean $enabled
+	 * @return self
 	 */
 	public function setEnabled($enabled) {
 		$this->enabled = $enabled;
+		return $this;
 	}
 	
 	
@@ -201,6 +210,10 @@ trait UserTrait {
 	// Add //
 	/////////
 	
+	/**
+	 * @param string $role
+	 * @return self 
+	 */
 	public function addRole($role) {
 		$role = strtoupper($role);
 		if ($role === User::ROLE_DEFAULT) {
@@ -214,17 +227,43 @@ trait UserTrait {
 		return $this;
 	}
 	
+	/**
+	 * @param UserConnectionInterface $userConnection
+	 */
+	public function addUserConnection(UserConnectionInterface $userConnection) {
+		if (!$this->userConnections->contains($userConnection)) {
+			$this->userConnections->add($userConnection);
+			$userConnection->setUser($this);
+		}
+		return $this;
+	}
+	
 	
 	////////////
 	// Remove //
 	////////////
 	
+	/**
+	 * @param string $role
+	 * @return self
+	 */
 	public function removeRole($role) {
 		$role = strtoupper($role);
 		$roles = $this->getRoles();
 		if (false !== $key = array_search($role, $roles, true)) {
 			unset($roles[$key]);
 			$this->setRoles($roles);
+		}
+		return $this;
+	}
+	
+	/**
+	 * @param UserConnectionInterface $userConnection
+	 * @return self
+	 */
+	public function removeUserConnection(UserConnectionInterface $userConnection) {
+		if ($this->userConnections->contains($userConnection)) {
+			$this->userConnections->removeElement($userConnection);
 		}
 		return $this;
 	}

@@ -1,6 +1,7 @@
 <?php
 namespace GollumSF\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface as UserInterfaceBase;
 
 /**
@@ -63,6 +64,11 @@ interface UserInterface extends UserInterfaceBase {
 	 */
 	public function getUpdatedAt();
 	
+	/**
+	 * @return ArrayCollection|UserConnectionInterface[]
+	 */
+	public function getUserConnections();
+	
 	
 	/////////////
 	// Setters //
@@ -100,6 +106,7 @@ interface UserInterface extends UserInterfaceBase {
 	
 	/**
 	 * @param boolean $enabled
+	 * @return self
 	 */
 	public function setEnabled($enabled);
 	
@@ -107,7 +114,7 @@ interface UserInterface extends UserInterfaceBase {
 	 * Sets createdAt.
 	 *
 	 * @param  \DateTime $createdAt
-	 * @return $this
+	 * @return self
 	 */
 	public function setCreatedAt(\DateTime $createdAt);
 	
@@ -115,7 +122,7 @@ interface UserInterface extends UserInterfaceBase {
 	 * Sets updatedAt.
 	 *
 	 * @param  \DateTime $updatedAt
-	 * @return $this
+	 * @return self
 	 */
 	public function setUpdatedAt(\DateTime $updatedAt);
 	
@@ -124,14 +131,34 @@ interface UserInterface extends UserInterfaceBase {
 	// Add //
 	/////////
 	
+	/**
+	 * @param $role
+	 * @return self
+	 */
 	public function addRole($role);
+	
+	/**
+	 * @param UserConnectionInterface $userConnection
+	 * @return self
+	 */
+	public function addUserConnection(UserConnectionInterface $userConnection);
 	
 	
 	////////////
 	// Remove //
 	////////////
 	
+	/**
+	 * @param $role
+	 * @return self
+	 */
 	public function removeRole($role);
+	
+	/**
+	 * @param UserConnectionInterface $userConnection
+	 * @return self
+	 */
+	public function removeUserConnection(UserConnectionInterface $userConnection);
 	
 	
 	////////////

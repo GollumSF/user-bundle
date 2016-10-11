@@ -21,7 +21,7 @@ class User implements UserInterface {
 	use UserTrait;
 	
 	public function __construct() {
-		$this->userTokens = new ArrayCollection();
+		$this->userConnections = new ArrayCollection();
 		$this->updatedAt  = new \DateTime();
 		$this->createdAt  = new \DateTime();
 	}

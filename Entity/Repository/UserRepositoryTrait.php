@@ -19,14 +19,4 @@ trait UserRepositoryTrait {
 			'id'      => $id,
 		]);
 	}
-	
-	/**
-	 * @return UserInterface
-	 */
-	public function findOneEnabledByEmail($email) {
-		return $this->findOneBy([
-			'enabled' => true,
-			'email'   => $email,
-		]);
-	}
 }

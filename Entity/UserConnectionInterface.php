@@ -3,12 +3,12 @@ namespace GollumSF\UserBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface as UserInterfaceBase;
 
-/**Token
- * UserInterface
+/**
+ * UserConnectionInterface
  *
  * @author Damien Duboeuf <smeagolworms4@gmail.com>
  */
-interface UserTokenInterface {
+interface UserConnectionInterface {
 	
 	
 	/////////////
@@ -23,12 +23,22 @@ interface UserTokenInterface {
 	/**
 	 * @return string
 	 */
-	public function getToken();
+	public function getProviderId();
 	
 	/**
-	 * @return User
+	 * @return string
+	 */
+	public function getProvider();
+	
+	/**
+	 * @return UserInterface
 	 */
 	public function getUser();
+	
+	/**
+	 * @return boolean
+	 */
+	public function getConfirmed();
 	
 	/**
 	 * Returns createdAt.
@@ -50,16 +60,28 @@ interface UserTokenInterface {
 	/////////////
 	
 	/**
-	 * @param string $token
+	 * @param string $providerId
 	 * @return self
 	 */
-	public function setToken($token);
+	public function setProviderId($providerId);
 	
 	/**
-	 * @param User $user
+	 * @param string $providerId
 	 * @return self
 	 */
-	public function setUser(User $user);
+	public function setProvider($provider);
+	
+	/**
+	 * @param UserInterface $user
+	 * @return self
+	 */
+	public function setUser(UserInterface $user);
+	
+	/**
+	 * @param boolean $confirmed
+	 * @return self
+	 */
+	public function setConfirmed($confirmed);
 	
 	/**
 	 * Sets createdAt.
