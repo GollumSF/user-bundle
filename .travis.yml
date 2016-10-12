@@ -24,7 +24,7 @@ before_script:
     
 install: composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 
-script: phpunit  --coverage-text --coverage-html=coverage-html
+script: phpunit  --coverage-text
 
 notifications:
     email:
