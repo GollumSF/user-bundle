@@ -15,8 +15,6 @@ use GollumSF\UserBundle\Entity\Repository\UserConnectionRepository;
  */
 class UserConnection implements UserConnectionInterface {
 	
-	const PROVIDER_EMAIL = 'email';
-	
 	use UserConnectionTrait;
 	
 	public function __construct() {

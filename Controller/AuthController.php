@@ -207,7 +207,6 @@ class AuthController extends CoreAbstractController {
 	 * @return string
 	 */
 	protected function getUrl($key) {
-		$url = $this->urlSelector->get($key);
 //		$request = $this->getRequest();
 //		if (
 //			strpos($url, '//') !== 0 &&
@@ -216,6 +215,6 @@ class AuthController extends CoreAbstractController {
 //		) {
 //			$url = $request->getBaseUrl().$url;
 //		}
-		return $this->generateUrl($url);
+		return $this->urlSelector->get($key);
 	}
 }

@@ -24,15 +24,15 @@ trait UserConnectionTrait {
 	
 	/**
 	 * @var string
-	 * @ORM\Column(type="string", nullable=false)
-	 */
-	protected $providerId;
-	
-	/**
-	 * @var string
 	 * @ORM\Column(type="string", length=50, nullable=false)
 	 */
 	protected $provider;
+	
+	/**
+	 * @var string
+	 * @ORM\Column(type="string", nullable=false)
+	 */
+	protected $providerId;
 	
 	/**
 	 * @var User
@@ -63,15 +63,15 @@ trait UserConnectionTrait {
 	/**
 	 * @return string
 	 */
-	public function getProviderId() {
-		$this->providerId;
+	public function getProvider() {
+		$this->provider;
 	}
 	
 	/**
 	 * @return string
 	 */
-	public function getProvider() {
-		$this->provider;
+	public function getProviderId() {
+		$this->providerId;
 	}
 	
 	/**
@@ -84,7 +84,7 @@ trait UserConnectionTrait {
 	/**
 	 * @return boolean
 	 */
-	public function getConfirmed() {
+	public function isConfirmed() {
 		$this->confirmed;
 	}
 	
@@ -94,20 +94,20 @@ trait UserConnectionTrait {
 	/////////////
 	
 	/**
-	 * @param string $providerId
-	 * @return self
-	 */
-	public function setProviderId($providerId) {
-		$this->providerId = $providerId;
-		return $this;
-	}
-	
-	/**
 	 * @param string $provider
 	 * @return self
 	 */
 	public function setProvider($provider) {
 		$this->provider = $provider;
+		return $this;
+	}
+	
+	/**
+	 * @param string $providerId
+	 * @return self
+	 */
+	public function setProviderId($providerId) {
+		$this->providerId = $providerId;
 		return $this;
 	}
 	

@@ -1,5 +1,10 @@
 # GollumSFRestBundle
 
+[![Build Status](https://travis-ci.org/GollumSF/user-bundle.svg?branch=master)](https://travis-ci.org/GollumSF/user-bundle)
+[![License](https://poser.pugx.org/gollumsf/user-bundle/license)](https://packagist.org/packages/gollumsf/user-bundle)
+[![Latest Stable Version](https://poser.pugx.org/gollumsf/user-bundle/v/stable)](https://packagist.org/packages/gollumsf/user-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/gollumsf/user-bundle/v/unstable)](https://packagist.org/packages/gollumsf/user-bundle)
+
 
 ## Installation:
 
@@ -14,6 +19,7 @@ class AppKernel extends Kernel {
 			// [...] //
 			
 			new GollumSF\CoreBundle\GollumSFCoreBundle(),
+			new GollumSF\CoreBundle\GollumSFMailBundle(),
 			new GollumSF\UserBundle\GollumSFUserBundle(),
 			
 			// [...] // 

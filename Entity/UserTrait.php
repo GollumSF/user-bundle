@@ -73,7 +73,7 @@ trait UserTrait {
 	/**
 	 * @var ArrayCollection|UserConnectionInterface[]
 	 *
-	 * @ORM\OneToMany(targetEntity=UserToken::class, mappedBy="user")
+	 * @ORM\OneToMany(targetEntity=UserConnection::class, mappedBy="user")
 	 */
 	protected $userConnections;
 	
@@ -124,7 +124,7 @@ trait UserTrait {
 		if ($this->roles) {
 			$roles = explode('|', $this->roles);	
 		}
-		$roles[] = User::ROLE_DEFAULT;
+		$roles[] = UserInterface::ROLE_DEFAULT;
 		return array_unique($roles);
 	}
 	
@@ -216,7 +216,7 @@ trait UserTrait {
 	 */
 	public function addRole($role) {
 		$role = strtoupper($role);
-		if ($role === User::ROLE_DEFAULT) {
+		if ($role === UserInterface::ROLE_DEFAULT) {
 			return $this;
 		}
 		$roles = $this->getRoles();

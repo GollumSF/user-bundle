@@ -1,6 +1,6 @@
 <?php
 namespace GollumSF\UserBundle\Entity\Repository;
-use GollumSF\UserBundle\Entity\UserConnection;
+
 use GollumSF\UserBundle\Entity\UserConnectionInterface;
 
 /**
@@ -20,7 +20,7 @@ trait UserConnectionRepositoryTrait {
 			->where('c.provider = :provider')
 			->andWhere('c.providerId = :email')
 			->andWhere('u.enabled = :enabled')
-			->setParameter('provider', UserConnection::PROVIDER_EMAIL)
+			->setParameter('provider', UserConnectionInterface::PROVIDER_EMAIL)
 			->setParameter('email', $email)
 			->setParameter('enabled', true)
 			->getQuery()

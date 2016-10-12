@@ -2,23 +2,20 @@
 namespace GollumSF\UserBundle\Controller;
 
 use GollumSF\CoreBundle\Controller\CoreAbstractController;
+use GollumSF\UserBundle\Entity\UserConnection;
 use GollumSF\UserBundle\Manager\UserManagerInterface;
 use GollumSF\UserBundle\Parameter\ParameterSelector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * EmailController
  * @author Damien Duboeuf <smeagolworms4@gmail.com>
  */
 class MailController extends CoreAbstractController {
-	
-	/**
-	 * @var UserManagerInterface
-	 */
-	private $userManager;
 	
 	/**
 	 * @var ParameterSelector
@@ -38,10 +35,27 @@ class MailController extends CoreAbstractController {
 		$this->urlSelector  = $this->get('gsf_user.parameter.url_selector');
 	}
 	
-	public function confirmEmailAction(Request $request) {
+	/**
+	 * @param Request $request
+	 * @param UserConnection $userConnection
+	 * @return Response
+	 */
+	public function confirmEmailAction(Request $request, UserConnection $userConnection) {
 		
-		return $this->render($this->getTwig('mail_confirm_email'), [
-			'base_mail' => $this->getTwig('base_mail'),
+		/**
+		 * @var \Twig_Environment $twig
+		 */
+		$twig = $this->get('twig');
+		
+		return $this->render($this->getTwig('mail_confirm_email_body'), [
+			'base_mail'      => $this->getTwig('base_mail'),
+			'userConnection' => $this->getTwig('$userConnection'),
+		],
+		[
+			'Mail-Subject' => 'gsf_user.mail.confirm_email.subject',
+			'Mail-Text'    => $twig->render($this->getTwig('mail_confirm_email_text'), [
+				'userConnection' => $this->getTwig('$userConnection'),
+			]),
 		]);
 	}
 	
@@ -51,6 +65,14 @@ class MailController extends CoreAbstractController {
 	 */
 	protected function getTwig($key) {
 		return $this->twigSelector->get($key);
+	}
+	
+	/**
+	 * @param $key
+	 * @return string
+	 */
+	protected function getUrl($key) {
+		return $this->urlSelector->get($key);
 	}
 	
 }

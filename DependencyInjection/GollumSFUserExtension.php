@@ -17,13 +17,13 @@ class GollumSFUserExtension extends Extension {
 		
 		$configuration = new Configuration();
 		$config = $this->processConfiguration($configuration, $configs);
+		
 		$this->applyConfigToParameter($container, 'gsf_user.configurations', $config);
 		
 		$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . "/../Resources/config"));
 		$loader->load("services.yml");
-		$loader->load("manager.yml");
+		$loader->load("managers.yml");
 		$loader->load("listeners.yml");
-		$loader->load("forms.yml");
 	}
 	
 	protected function applyConfigToParameter(ContainerBuilder $container, $prefix, $config) {

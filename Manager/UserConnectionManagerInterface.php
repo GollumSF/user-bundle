@@ -12,6 +12,16 @@ use GollumSF\UserBundle\Entity\UserInterface;
 interface UserConnectionManagerInterface {
 	
 	/**
+	 * @return string
+	 */
+	public function getEntityClass();
+	
+	/**
+	 * @return EventDispatcherInterface
+	 */
+	public function getEventDispatcher();
+	
+	/**
 	 * @param string $provider
 	 * @param string $providerId
 	 * @param UserInterface $user

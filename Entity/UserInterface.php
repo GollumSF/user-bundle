@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface as UserInterfaceBase;
  */
 interface UserInterface extends UserInterfaceBase {
 	
+	const ROLE_DEFAULT = 'ROLE_USER';
+	
 	/////////////
 	// Getters //
 	/////////////

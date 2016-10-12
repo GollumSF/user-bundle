@@ -16,8 +16,6 @@ use GollumSF\UserBundle\Entity\Repository\UserRepository;
  */
 class User implements UserInterface {
 	
-	const ROLE_DEFAULT = 'ROLE_USER';
-	
 	use UserTrait;
 	
 	public function __construct() {

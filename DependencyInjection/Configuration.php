@@ -20,8 +20,7 @@ class Configuration implements ConfigurationInterface {
 		
 		$rootNode
 			->children()
-				->append($this->addUserNode())
-				->append($this->addUserConnectionNode())
+				->append($this->addEntitiesNode())
 				->append($this->addTwigNode())
 				->append($this->addFormNode())
 				->append($this->addUrlNode())
@@ -31,6 +30,22 @@ class Configuration implements ConfigurationInterface {
 		return $treeBuilder;
 	}
 	
+	
+	public function addEntitiesNode() {
+		$builder = new TreeBuilder();
+		$node = $builder->root('entities');
+		
+		$node
+			->addDefaultsIfNotSet()
+			->children()
+				->append($this->addUserNode())
+				->append($this->addUserConnectionNode())
+			->end()
+		;
+		
+		return $node;
+	}
+	
 	public function addUserNode() {
 		$builder = new TreeBuilder();
 		$node = $builder->root('user');
@@ -38,7 +53,7 @@ class Configuration implements ConfigurationInterface {
 		$node
 			->addDefaultsIfNotSet()
 			->children()
-				->scalarNode('entity')->defaultValue(User::class)->end()
+				->scalarNode('class')->defaultValue(User::class)->end()
 				->scalarNode('manager')->defaultValue(UserManager::class)->end()
 			->end()
 		;
@@ -53,7 +68,7 @@ class Configuration implements ConfigurationInterface {
 		$node
 			->addDefaultsIfNotSet()
 			->children()
-				->scalarNode('entity')->defaultValue(UserConnection::class)->end()
+				->scalarNode('class')->defaultValue(UserConnection::class)->end()
 				->scalarNode('manager')->defaultValue(UserConnectionManager::class)->end()
 			->end()
 		;
@@ -104,6 +119,7 @@ class Configuration implements ConfigurationInterface {
 			->children()
 				->scalarNode('homepage')      ->defaultValue('/')              ->end()
 				->scalarNode('login')         ->defaultValue('/login')         ->end()
+				->scalarNode('logout')        ->defaultValue('/logout')         ->end()
 				->scalarNode('register')      ->defaultValue('/register')      ->end()
 				->scalarNode('reset_password')->defaultValue('/reset-password')->end()
 			->end()

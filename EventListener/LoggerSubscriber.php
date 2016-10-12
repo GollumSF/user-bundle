@@ -7,13 +7,14 @@ use GollumSF\UserBundle\Event\AuthenticateEvent;
 use GollumSF\UserBundle\Event\LogoutEvent;
 use GollumSF\UserBundle\Event\RegisterUserEvent;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * LoggerListener
+ * LoggerSubscriber
  *
  * @author Damien Duboeuf <smeagolworms4@gmail.com>
  */
-class LoggerSubscriber {
+class LoggerSubscriber implements EventSubscriberInterface {
 	
 	/**
 	 * @var LoggerInterface
@@ -44,18 +45,16 @@ class LoggerSubscriber {
 	}
 	
 	public function authenticateEvent(AuthenticateEvent $event) {
-		$this->logger->info(sprintf('Register new User id=%s', $event->getUser()->getId()));
+		$this->logger->info(sprintf('Authenticate User id=%s', $event->getUser()->getId()));
 	}
 	
 	public function logoutEvent(LogoutEvent $event) {
 		$token = $event->getToken();
 		$user = $token ? $token->getUser() : NULL;
-		$this->logger->info(sprintf('Register new User id=%s', $user instanceof UserInterface ? $user->getId() : 'Unknown user'));
+		$this->logger->info(sprintf('Logout User id=%s', $user instanceof UserInterface ? $user->getId() : 'Unknown user'));
 	}
 	
-	public static function getSubscribedEvents()
-	{
-		// return the subscribed events, their methods and priorities
+	public static function getSubscribedEvents() {
 		return [
 			RegisterUserEvent::NAME      => ['registerUserEvent'     , 0],
 			AddUserConnectionEvent::NAME => ['addUserConnectionEvent', 0],

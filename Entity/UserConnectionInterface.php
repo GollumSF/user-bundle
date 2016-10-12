@@ -10,6 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface as UserInterfaceBase;
  */
 interface UserConnectionInterface {
 	
+	const PROVIDER_EMAIL = 'email';
+	
 	
 	/////////////
 	// Getters //
@@ -23,12 +25,12 @@ interface UserConnectionInterface {
 	/**
 	 * @return string
 	 */
-	public function getProviderId();
+	public function getProvider();
 	
 	/**
 	 * @return string
 	 */
-	public function getProvider();
+	public function getProviderId();
 	
 	/**
 	 * @return UserInterface
@@ -38,7 +40,7 @@ interface UserConnectionInterface {
 	/**
 	 * @return boolean
 	 */
-	public function getConfirmed();
+	public function isConfirmed();
 	
 	/**
 	 * Returns createdAt.
@@ -63,13 +65,13 @@ interface UserConnectionInterface {
 	 * @param string $providerId
 	 * @return self
 	 */
-	public function setProviderId($providerId);
+	public function setProvider($provider);
 	
 	/**
 	 * @param string $providerId
 	 * @return self
 	 */
-	public function setProvider($provider);
+	public function setProviderId($providerId);
 	
 	/**
 	 * @param UserInterface $user

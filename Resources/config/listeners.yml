@@ -2,6 +2,7 @@ parameters:
     gsf_user.securityauthenticationlistener_class:  GollumSF\UserBundle\Security\Firewall\UserListener
     gsf_user.listener_insufficientauthentication_class: GollumSF\UserBundle\EventListener\InsufficientAuthenticationListener
     gsf_user.listener_logger_subscriber_class: GollumSF\UserBundle\EventListener\LoggerSubscriber
+    gsf_user.listener_mail_subscriber_class: GollumSF\UserBundle\EventListener\MailSubscriber
 services:
     
     gsf_user.security.authentication_listener:
@@ -24,6 +25,13 @@ services:
         class: "%gsf_user.listener_logger_subscriber_class%"
         arguments:
             - '@logger'
+        tags:
+            - { name: kernel.event_subscriber }
+    
+    gsf_user.listener.mail_subscriber:
+        class: "%gsf_user.listener_mail_subscriber_class%"
+        arguments:
+            - '@gsf_email.sender'
         tags:
             - { name: kernel.event_subscriber }
     

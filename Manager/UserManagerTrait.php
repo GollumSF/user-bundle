@@ -3,7 +3,6 @@ namespace GollumSF\UserBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use GollumSF\UserBundle\Entity\Repository\UserRepositoryInterface;
-use GollumSF\UserBundle\Entity\UserConnection;
 use GollumSF\UserBundle\Entity\UserInterface;
 use GollumSF\UserBundle\Event\RegisterUserEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -117,7 +116,7 @@ trait UserManagerTrait {
 		$em->flush();
 		
 		if ($user->getEmail()) {
-			$userConnection = $this->userConnectionManager->createUserConnection(UserConnection::PROVIDER_EMAIL, $user->getEmail(), $user, false);
+			$userConnection = $this->userConnectionManager->createUserConnection(UserConnectionInterface::PROVIDER_EMAIL, $user->getEmail(), $user, false);
 			$user->addUserConnection($userConnection);
 		}
 		

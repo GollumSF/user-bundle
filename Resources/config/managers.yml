@@ -6,18 +6,17 @@ services:
             - '@gsf_user.manager.user'
         public: false
     
-    gsf_user.manager.user_connection:
-        class: "%gsf_user.configurations.user_connection.manager%"
-        calls:
-            - [setEntityManager, ['@doctrine.orm.entity_manager']]
-            - [setEntityClass  , ['%gsf_user.configurations.user_connection.entity%']]
-            - [setEventDispatcher, ['@event_dispatcher']]
-    
     gsf_user.manager.user:
-        class: "%gsf_user.configurations.user.manager%"
+        class: "%gsf_user.configurations.entities.user.manager%"
         calls:
             - [setEntityManager, ['@doctrine.orm.entity_manager']]
-            - [setEntityClass  , ['%gsf_user.configurations.user.entity%']]
+            - [setEntityClass  , ['%gsf_user.configurations.entities.user.class%']]
             - [setEventDispatcher, ['@event_dispatcher']]
             - [setUserConnectionManager  , ['@gsf_user.manager.user_connection']]
     
+    gsf_user.manager.user_connection:
+        class: "%gsf_user.configurations.entities.user_connection.manager%"
+        calls:
+            - [setEntityManager, ['@doctrine.orm.entity_manager']]
+            - [setEntityClass  , ['%gsf_user.configurations.entities.user_connection.class%']]
+            - [setEventDispatcher, ['@event_dispatcher']]

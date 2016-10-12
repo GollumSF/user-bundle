@@ -1,0 +1,34 @@
+{
+	"name" : "gollumsf/user-bundle",
+	"type" : "symfony-bundle",
+	"description" : "Very simple and overridable user bundle",
+	"keywords" : [
+		"user",
+		"simple",
+		"overridable",
+		"gollumsf"
+	],
+	"homepage" : "https://github.com/GollumSF/core-bundle",
+	"license" : "GPLv3",
+	"authors" : [{
+			"name" : "Damien Duboeuf",
+			"email" : "smeagolworms4@gmail.com"
+		}
+	],
+	"support" : {
+		"email" : "smeagolworms4@gmail.com",
+		"wiki" : "https://github.com/GollumSF/core-bundle/blob/master/README.md"
+	},
+	"require" : {
+		"php" : ">=5.5",
+		"gollumsf/mail-bundle" : "dev-master",
+		"gollumsf/core-bundle" : "dev-master",
+		"symfony/framework-bundle" : ">=2.7"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"GollumSF\\UserBundle" : ""
+		}
+	},
+	"target-dir" : "GollumSF/UserBundle"
+}

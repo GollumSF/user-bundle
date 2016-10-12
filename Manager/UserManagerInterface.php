@@ -11,6 +11,21 @@ use GollumSF\UserBundle\Entity\UserInterface;
 interface UserManagerInterface {
 	
 	/**
+	 * @return string
+	 */
+	public function getEntityClass();
+	
+	/**
+	 * @return EventDispatcherInterface
+	 */
+	public function getEventDispatcher();
+	
+	/**
+	 * @return UserConnectionManagerInterface
+	 */
+	public function getUserConnectionManager();
+	
+	/**
 	 * @return UserInterface
 	 */
 	public function createUser();

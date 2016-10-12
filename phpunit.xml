@@ -1,0 +1,17 @@
+<phpunit colors="true">
+	<testsuites>
+		<testsuite>
+			<directory>./Tests</directory>
+		</testsuite>
+	</testsuites>
+	
+	<filter>
+		<whitelist>
+			<directory>./</directory>
+			<exclude>
+				<directory>./Tests</directory>
+				<directory>./vendor</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+</phpunit>
