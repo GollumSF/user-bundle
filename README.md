@@ -1,4 +1,4 @@
-# GollumSFRestBundle
+# GollumSFUserBundle
 
 [![Build Status](https://travis-ci.org/GollumSF/user-bundle.svg?branch=master)](https://travis-ci.org/GollumSF/user-bundle)
 [![License](https://poser.pugx.org/gollumsf/user-bundle/license)](https://packagist.org/packages/gollumsf/user-bundle)
