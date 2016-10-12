@@ -22,7 +22,7 @@
 	"minimum-stability": "dev",
 	"require" : {
 		"php" : ">=5.5",
-		"gollumsf/mail-bundle" : "dev-master",
+		"gollumsf/email-bundle" : "dev-master",
 		"gollumsf/core-bundle" : "dev-master",
 		"symfony/framework-bundle" : ">=2.7"
 	},
