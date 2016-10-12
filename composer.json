@@ -19,6 +19,7 @@
 		"email" : "smeagolworms4@gmail.com",
 		"wiki" : "https://github.com/GollumSF/core-bundle/blob/master/README.md"
 	},
+	"minimum-stability": "dev",
 	"require" : {
 		"php" : ">=5.5",
 		"gollumsf/mail-bundle" : "dev-master",
