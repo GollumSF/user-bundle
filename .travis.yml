@@ -27,5 +27,6 @@ install: composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 script: phpunit  --coverage-text
 
 notifications:
+    slack: redori:zPaW8aAbTCF9NJh13BtWq9UV
     email:
         - smeagolworms4@gmail.com
