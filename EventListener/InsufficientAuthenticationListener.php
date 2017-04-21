@@ -6,7 +6,6 @@ use GollumSF\UserBundle\Parameter\ParameterSelector;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException;
@@ -50,13 +49,13 @@ class InsufficientAuthenticationListener {
 		return $user;
 	}
 	
-	
 	/**
+	 * @param Request $request
+	 * @param array $params
 	 * @return string
 	 */
-	protected function getLoginUrl(Request $request) {
-		$url = $this->urlSelector->get('login');
-		return $this->router->generate($url);
+	protected function getLoginUrl(Request $request, $params = []) {
+		return $this->urlSelector->get('login', $params);
 	}
 	
 	public function onKernelException(GetResponseForExceptionEvent $event) {
@@ -70,8 +69,8 @@ class InsufficientAuthenticationListener {
 			!$request->isXmlHttpRequest() &&
 			$exception instanceof InsufficientAuthenticationException
 		) {
-			$url = $this->getLoginUrl($request);
-			$event->setResponse(new RedirectResponse($url.'?redirect='.urlencode($request->getRequestUri())));
+			$url = $this->getLoginUrl($request, [ 'redirect' => $request->getRequestUri() ]);
+			$event->setResponse(new RedirectResponse($url));
 		}
 	}
 	

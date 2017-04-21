@@ -64,28 +64,28 @@ trait UserConnectionTrait {
 	 * @return string
 	 */
 	public function getProvider() {
-		$this->provider;
+		return $this->provider;
 	}
 	
 	/**
 	 * @return string
 	 */
 	public function getProviderId() {
-		$this->providerId;
+		return $this->providerId;
 	}
 	
 	/**
 	 * @return UserInterface
 	 */
 	public function getUser() {
-		$this->user;
+		return $this->user;
 	}
 	
 	/**
 	 * @return boolean
 	 */
 	public function isConfirmed() {
-		$this->confirmed;
+		return $this->confirmed;
 	}
 	
 	

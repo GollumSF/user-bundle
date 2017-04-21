@@ -2,6 +2,7 @@
 namespace GollumSF\UserBundle\EventListener;
 
 use GollumSF\EmailBundle\Sender\EmailSenderInterface;
+use GollumSF\UserBundle\Entity\UserConnectionInterface;
 use GollumSF\UserBundle\Event\AddUserConnectionEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

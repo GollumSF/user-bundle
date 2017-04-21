@@ -2,14 +2,15 @@
 namespace GollumSF\UserBundle\Controller;
 
 use GollumSF\CoreBundle\Controller\CoreAbstractController;
+use GollumSF\EmailBundle\Builder\EmailBuilder;
+use GollumSF\UserBundle\Confirm\ConfirmMail;
 use GollumSF\UserBundle\Entity\UserConnection;
-use GollumSF\UserBundle\Manager\UserManagerInterface;
 use GollumSF\UserBundle\Parameter\ParameterSelector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use GollumSF\UserBundle\Parameter\UrlParameterSelector;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * EmailController
@@ -23,7 +24,7 @@ class MailController extends CoreAbstractController {
 	private $twigSelector;
 	
 	/**
-	 * @var ParameterSelector
+	 * @var UrlParameterSelector
 	 */
 	private $urlSelector;
 	
@@ -43,20 +44,29 @@ class MailController extends CoreAbstractController {
 	public function confirmEmailAction(Request $request, UserConnection $userConnection) {
 		
 		/**
-		 * @var \Twig_Environment $twig
+		 * @var \Twig_Environment   $twig
+		 * @var TranslatorInterface $translator
+		 * @var ConfirmMail         $confirmMail
 		 */
-		$twig = $this->get('twig');
+		$twig        = $this->get('twig');
+		$translator  = $this->get('translator');
+		$confirmMail = $this->get('gsf_user.confirm.mail');
 		
-		return $this->render($this->getTwig('mail_confirm_email_body'), [
-			'base_mail'      => $this->getTwig('base_mail'),
-			'userConnection' => $this->getTwig('$userConnection'),
-		],
-		[
-			'Mail-Subject' => 'gsf_user.mail.confirm_email.subject',
-			'Mail-Text'    => $twig->render($this->getTwig('mail_confirm_email_text'), [
-				'userConnection' => $this->getTwig('$userConnection'),
-			]),
-		]);
+		$subject    = $translator->trans('gsf_user.mail.confirm_email.subject');
+		$confirmUrl = $confirmMail->generateUrlByUserConnection($userConnection);
+		
+		$params = [
+			'base_html'      => $this->getTwig('base_mail_html'),
+			'base_txt'       => $this->getTwig('base_mail_txt'),
+			'subject'        => $subject,
+			'userConnection' => $userConnection,
+			'confirmUrl'     => $confirmUrl,
+		];
+		
+		return $this->render($this->getTwig('mail_confirm_email_html'), $params, new Response('', Response::HTTP_OK, [
+			EmailBuilder::HEADER_SUBJECT  => $subject,
+			EmailBuilder::HEADER_ALT_TEXT => $twig->render($this->getTwig('mail_confirm_email_txt'), $params),
+		]));
 	}
 	
 	/**
@@ -69,10 +79,12 @@ class MailController extends CoreAbstractController {
 	
 	/**
 	 * @param $key
+	 * @param array $params
+	 * @param int $mode
 	 * @return string
 	 */
-	protected function getUrl($key) {
-		return $this->urlSelector->get($key);
+	protected function getUrl($key, $params = [], $mode) {
+		return  $this->urlSelector->get($key, $params, $mode);
 	}
 	
 }

@@ -3,6 +3,7 @@ namespace GollumSF\UserBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use GollumSF\UserBundle\Entity\Repository\UserRepositoryInterface;
+use GollumSF\UserBundle\Entity\UserConnectionInterface;
 use GollumSF\UserBundle\Entity\UserInterface;
 use GollumSF\UserBundle\Event\RegisterUserEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -95,6 +96,19 @@ trait UserManagerTrait {
 	}
 	
 	/**
+	 * @param mixed $entity
+	 * @return mixed
+	 */
+	public function update($entity) {
+		if (is_object($entity)) {
+			$em = $this->getEntityManager();
+			$em->persist($entity);
+			$em->flush($entity);
+		}
+		return $entity;
+	}
+	
+	/**
 	 * @return UserInterface
 	 */
 	public function createUser() {
@@ -109,15 +123,15 @@ trait UserManagerTrait {
 	public function register(UserInterface $user) {
 		
 		$user->setSalt(uniqid());
-		$user->setPassword(md5($user->getPlainPassword()));
+		
+		// TODO add to update entity event
+		$user->setPassword(sha1($user->getPlainPassword()));
 		$user->eraseCredentials();
-		$em = $this->getEntityManager();
-		$em->persist($user);
-		$em->flush();
+		
+		$this->update($user);
 		
 		if ($user->getEmail()) {
-			$userConnection = $this->userConnectionManager->createUserConnection(UserConnectionInterface::PROVIDER_EMAIL, $user->getEmail(), $user, false);
-			$user->addUserConnection($userConnection);
+			$this->userConnectionManager->createUserConnection(UserConnectionInterface::PROVIDER_EMAIL, $user->getEmail(), $user, false);
 		}
 		
 		$event = new RegisterUserEvent($user);

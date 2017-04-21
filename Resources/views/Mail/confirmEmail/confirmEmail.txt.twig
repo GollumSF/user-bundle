@@ -1,0 +1,11 @@
+{% extends base_txt %}
+
+{% block content %}
+
+{{ 'gsf_user.mail.confirm_email.welcome'|trans }}
+
+{{ 'gsf_user.mail.confirm_email.confirm'|trans({ '%email%':userConnection.providerId }) }}
+
+{{ 'gsf_user.mail.confirm_email.link'|trans }} : {{ confirmUrl }}
+
+{% endblock %}

@@ -26,3 +26,9 @@ gsf_user:
         reset_password:
             email: 'Email'
             submit: 'Send'
+    mail:
+        confirm_email:
+            subject: 'Confirm your registration'
+            welcome: 'Welcome,'
+            confirm: 'You must validate your email: %email%'
+            link: 'Click here to validate'

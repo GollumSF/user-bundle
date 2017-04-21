@@ -3,14 +3,15 @@ namespace GollumSF\UserBundle\Controller;
 
 use GollumSF\CoreBundle\Controller\CoreAbstractController;
 use GollumSF\UserBundle\Authenticator\AuthenticatorInterface;
+use GollumSF\UserBundle\Confirm\ConfirmMail;
 use GollumSF\UserBundle\Manager\UserManagerInterface;
 use GollumSF\UserBundle\Parameter\ParameterSelector;
+use GollumSF\UserBundle\Parameter\UrlParameterSelector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * AuthController
@@ -39,7 +40,7 @@ class AuthController extends CoreAbstractController {
 	private $twigSelector;
 	
 	/**
-	 * @var ParameterSelector
+	 * @var UrlParameterSelector
 	 */
 	private $urlSelector;
 	
@@ -59,9 +60,10 @@ class AuthController extends CoreAbstractController {
 	 */
 	public function loginAction(Request $request) {
 		
-		$user     = $this->userManager->createUser();
-		$form     = $this->createForm($this->getForm('login'), $user, [ 'validation_groups' => ['login'] ]);
-		$redirect = $request->get('redirect');
+		$user           = $this->userManager->createUser();
+		$form           = $this->createForm($this->getForm('login'), $user, [ 'validation_groups' => ['login'] ]);
+		$redirect       = $request->get('redirect');
+		$redirectParams = $redirect ? [ 'redirect' => $redirect ] : [];
 		
 		if ($request->isMethod('POST')) {
 			$form->handleRequest($request);
@@ -70,7 +72,6 @@ class AuthController extends CoreAbstractController {
 				$userDB = $this->userManager->findOneEnabledByEmail($user->getEmail());
 				if ($userDB) {
 					
-					// TODO Log User
 					$user = $this->userManager->register($userDB);
 					
 					if ($this->authenticator->authenticate($user)) {
@@ -89,8 +90,8 @@ class AuthController extends CoreAbstractController {
 			'base'           => $this->getTwig('base'),
 			'base_auth'      => $this->getTwig('base_auth'),
 			'form'           => $form->createView(),
-			'register'       => $this->getUrl('register').($redirect ? '?redirect='.urlencode($redirect) : ''),
-			'reset_password' => $this->getUrl('reset_password').($redirect ? '?redirect='.urlencode($redirect) : ''),
+			'register'       => $this->getUrl('register', $redirectParams),
+			'reset_password' => $this->getUrl('reset_password', $redirectParams),
 		]);
 	}
 	
@@ -103,6 +104,7 @@ class AuthController extends CoreAbstractController {
 		$user     = $this->userManager->createUser();
 		$form     = $this->createForm($this->getForm('register'), $user, [ 'validation_groups' => ['register'] ]);
 		$redirect = $request->get('redirect');
+		$redirectParams = $redirect ? [ 'redirect' => $redirect ] : [];
 		
 		if ($request->isMethod('POST')) {
 			$form->handleRequest($request);
@@ -119,8 +121,8 @@ class AuthController extends CoreAbstractController {
 			'base'           => $this->getTwig('base'),
 			'base_auth'      => $this->getTwig('base_auth'),
 			'form'           => $form->createView(),
-			'login'          => $this->getUrl('login').($redirect ? '?redirect='.urlencode($redirect) : ''),
-			'reset_password' => $this->getUrl('reset_password').($redirect ? '?redirect='.urlencode($redirect) : ''),
+			'login'          => $this->getUrl('login', $redirectParams),
+			'reset_password' => $this->getUrl('reset_password', $redirectParams),
 		]);
 	}
 	
@@ -144,12 +146,9 @@ class AuthController extends CoreAbstractController {
 	 */
 	public function confirmEmailAction(Request $request) {
 		
-		$email = $request->get('e');
-		$token = $request->get('t');
-		
-		if (!$email || !$token) {
-			new BadRequestHttpException('Query string t or e not found');
-		}
+		/** @var ConfirmMail $confirmMail */
+		$confirmMail = $this->get('gsf_user.confirm.mail');
+		$email = $confirmMail->validateRequest($request);
 		
 		return $this->render($this->getTwig('confirm_mail'), [
 			'base_auth' => $this->getTwig('base_auth'),
@@ -167,6 +166,7 @@ class AuthController extends CoreAbstractController {
 		$user     = $this->userManager->createUser();
 		$form     = $this->createForm($this->getForm('reset_password'), $user, [ 'validation_groups' => ['reset_password'] ]);
 		$redirect = $request->get('redirect');
+		$redirectParams = $redirect ? [ 'redirect' => $redirect ] : [];
 		
 		if ($request->isMethod('POST')) {
 			$form->handleRequest($request);
@@ -174,7 +174,7 @@ class AuthController extends CoreAbstractController {
 				
 				// TODO Send Email reset password
 				
-				return $this->redirect($this->getUrl('login').($redirect ? '?redirect='.urlencode($redirect) : ''));
+				return $this->redirect($this->getUrl('login', $redirectParams));
 			}
 		}
 		
@@ -182,13 +182,13 @@ class AuthController extends CoreAbstractController {
 			'base'      => $this->getTwig('base'),
 			'base_auth' => $this->getTwig('base_auth'),
 			'form'      => $form->createView(),
-			'login'     => $this->getUrl('login').($redirect ? '?redirect='.urlencode($redirect) : ''),
-			'register'  => $this->getUrl('register').($redirect ? '?redirect='.urlencode($redirect) : ''),
+			'login'     => $this->getUrl('login', $redirectParams),
+			'register'  => $this->getUrl('register', $redirectParams),
 		]);
 	}
 	
 	/**
-	 * @param $key
+	 * @param string $key
 	 * @return string
 	 */
 	protected function getForm($key) {
@@ -196,7 +196,7 @@ class AuthController extends CoreAbstractController {
 	}
 	
 	/**
-	 * @param $key
+	 * @param string $key
 	 * @return string
 	 */
 	protected function getTwig($key) {
@@ -204,17 +204,12 @@ class AuthController extends CoreAbstractController {
 	}
 	
 	/**
+	 * @param $key
+	 * @param array $params
+	 * @param int $mode
 	 * @return string
 	 */
-	protected function getUrl($key) {
-//		$request = $this->getRequest();
-//		if (
-//			strpos($url, '//') !== 0 &&
-//			!filter_var($url, FILTER_VALIDATE_URL) &&
-//			$this->get('kernel')->getEnvironment() == 'dev'
-//		) {
-//			$url = $request->getBaseUrl().$url;
-//		}
-		return $this->urlSelector->get($key);
+	protected function getUrl($key, $params = [], $mode) {
+		return  $this->urlSelector->get($key, $params, $mode);
 	}
 }

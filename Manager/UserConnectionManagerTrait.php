@@ -90,9 +90,10 @@ trait UserConnectionManagerTrait {
 		$userConnection
 			->setProvider($provider)
 			->setProviderId($providerId)
-			->setUser($user)
 			->setConfirmed($confirmed)
 		;
+		$user->addUserConnection($userConnection);
+		
 		$em = $this->getEntityManager();
 		$em->persist($userConnection);
 		$em->flush();

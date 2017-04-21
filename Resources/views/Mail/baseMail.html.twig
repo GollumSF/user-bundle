@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="{% block locale %}{{ _locale is defined ? _locale : app.request.locale }}{% endblock %}">
+<head>
+	<meta charset="{{ _charset }}" />
+	{% block head %}{% endblock %}
+	<title>{% block title %}{{ subject is defined ?subject : '' }}{% endblock %}</title>
+</head>
+	<body>
+		{% block stylesheets %}{% endblock %}
+		<div id="content">
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+</html>
+<!DOCTYPE html>

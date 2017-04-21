@@ -20,9 +20,15 @@ class ParameterSelector {
 	 */
 	private $baseName;
 	
-	public function __construct(ContainerInterface $container, $baseName) {
+	/**
+	 * @var string
+	 */
+	private $prefix;
+	
+	public function __construct(ContainerInterface $container, $baseName, $prefix = '') {
 		$this->container = $container;
 		$this->baseName  = $baseName;
+		$this->prefix    = $prefix;
 	}
 	
 	/**
@@ -31,7 +37,7 @@ class ParameterSelector {
 	 * @return mixed
 	 */
 	public function get($key) {
-		return $this->container->getParameter($this->baseName.'.'.$key);
+		return $this->prefix.$this->container->getParameter($this->baseName.'.'.$key);
 	}
 	
 }

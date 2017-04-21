@@ -83,11 +83,15 @@ class Configuration implements ConfigurationInterface {
 		$node
 			->addDefaultsIfNotSet()
 			->children()
-				->scalarNode('base')          ->defaultValue('::base.html.twig')                               ->end()
-				->scalarNode('base_auth')     ->defaultValue('GollumSFUserBundle:Auth:base.html.twig')         ->end()
-				->scalarNode('login')         ->defaultValue('GollumSFUserBundle:Auth:login.html.twig')        ->end()
-				->scalarNode('register')      ->defaultValue('GollumSFUserBundle:Auth:register.html.twig')     ->end()
-				->scalarNode('reset_password')->defaultValue('GollumSFUserBundle:Auth:resetPassword.html.twig')->end()
+				->scalarNode('base')                   ->defaultValue('::base.html.twig')                                           ->end()
+				->scalarNode('base_auth')              ->defaultValue('GollumSFUserBundle:Auth:base.html.twig')                     ->end()
+				->scalarNode('login')                  ->defaultValue('GollumSFUserBundle:Auth:login.html.twig')                    ->end()
+				->scalarNode('register')               ->defaultValue('GollumSFUserBundle:Auth:register.html.twig')                 ->end()
+				->scalarNode('reset_password')         ->defaultValue('GollumSFUserBundle:Auth:resetPassword.html.twig')            ->end()
+				->scalarNode('base_mail_html')         ->defaultValue('GollumSFUserBundle:Mail:baseMail.html.twig')                ->end()
+				->scalarNode('base_mail_txt')          ->defaultValue('GollumSFUserBundle:Mail:baseMail.txt.twig')                 ->end()
+				->scalarNode('mail_confirm_email_html')->defaultValue('GollumSFUserBundle:Mail:confirmEmail/confirmEmail.html.twig')->end()
+				->scalarNode('mail_confirm_email_txt') ->defaultValue('GollumSFUserBundle:Mail:confirmEmail/confirmEmail.txt.twig') ->end()
 			->end()
 		;
 		
@@ -117,11 +121,13 @@ class Configuration implements ConfigurationInterface {
 		$node
 			->addDefaultsIfNotSet()
 			->children()
+				->scalarNode('prefix')        ->defaultValue('')               ->end()
 				->scalarNode('homepage')      ->defaultValue('/')              ->end()
 				->scalarNode('login')         ->defaultValue('/login')         ->end()
-				->scalarNode('logout')        ->defaultValue('/logout')         ->end()
+				->scalarNode('logout')        ->defaultValue('/logout')        ->end()
 				->scalarNode('register')      ->defaultValue('/register')      ->end()
 				->scalarNode('reset_password')->defaultValue('/reset-password')->end()
+				->scalarNode('confirm_email') ->defaultValue('/confirm-email') ->end()
 			->end()
 		;
 		

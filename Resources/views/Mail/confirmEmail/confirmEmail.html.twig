@@ -1,0 +1,13 @@
+{% extends base_html %}
+
+{% block content %}
+	<h2>{{ 'gsf_user.mail.confirm_email.welcome'|trans }}</h2>
+
+	<p>
+		{{ 'gsf_user.mail.confirm_email.confirm'|trans({ '%email%':userConnection.providerId }) }}
+	</p>
+	
+	<p>
+		<a href="{{ confirmUrl }}">{{ 'gsf_user.mail.confirm_email.link'|trans }}</a>
+	</p>
+{% endblock %}

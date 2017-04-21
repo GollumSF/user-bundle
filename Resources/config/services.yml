@@ -1,8 +1,10 @@
 parameters:
     gsf_user.securityauthenticationprovider_class: GollumSF\UserBundle\Security\Authentication\Provider\UserAuthenticationProvider
     gsf_user.authenticator_class: GollumSF\UserBundle\Authenticator\Authenticator
+    gsf_user.gsfuserconfirmmail_class: GollumSF\UserBundle\Confirm\ConfirmMail
     gsf_user.parameter_twigselector_class: GollumSF\UserBundle\Parameter\ParameterSelector
     gsf_user.parameter_formselector_class: GollumSF\UserBundle\Parameter\ParameterSelector
+    gsf_user.parameter_urlselector_class: GollumSF\UserBundle\Parameter\UrlParameterSelector
 services:
     
     gsf_user.security.authentication_provider:
@@ -32,7 +34,17 @@ services:
             - 'gsf_user.configurations.twig'
     
     gsf_user.parameter.url_selector:
-        class: "%gsf_user.parameter_formselector_class%"
+        class: "%gsf_user.parameter_urlselector_class%"
         arguments:
             - '@service_container'
             - 'gsf_user.configurations.url'
+            - '%gsf_user.configurations.url.prefix%'
+        calls: 
+            - [ 'setRequestStack', [ '@request_stack' ]]
+    
+    gsf_user.confirm.mail:
+        class: "%gsf_user.gsfuserconfirmmail_class%"
+        arguments:
+            - '@gsf_url_tokenizer.tokenizer'
+            - '@gsf_url_tokenizer.ckecker'
+            - '@gsf_user.parameter.url_selector'
