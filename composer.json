@@ -9,7 +9,7 @@
 		"gollumsf"
 	],
 	"homepage" : "https://github.com/GollumSF/user-bundle",
-	"license" : "GPLv3",
+	"license" : "GPL-3.0-or-later",
 	"authors" : [{
 			"name" : "Damien Duboeuf",
 			"email" : "smeagolworms4@gmail.com"
